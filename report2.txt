@@ -2,7 +2,7 @@
 2: reaching http service on port 8080 through the browser revealed the specific server file system and its version
 3: server file system verson was vulnerable (CVE-2014-6287)
 
-
+METHOD-1
 4: looking for an exploit with metasploit
 5: machine exploited succesfully using meterpreter payload and gained access as Bill user on the target. 
 6: using a tool called PowerUp.ps1 showed some vulnerabilities including unquoted service path and canRestart option set to true for AdvancedSystemCareService9 pointing to a file called ASCService.exe running as LocalSystem 
@@ -14,7 +14,7 @@
 12: gained localsystem shell on attacker machine
 13: flags retrived
 
-
+METHOD-2
 4: looking for an exploit on exploit-db
 5: setting up http server and nc server on the attacker machine as decleared on exploit's instructions
 6: exploit code converted from python2 to python3. code modified due the specific attacker machine enviroment: http attacker server was running on port 9000 instead of default 80.
