@@ -1,0 +1,66 @@
+Network Troubleshooting
+Internet Connection instability & DHCP failure
+
+Operator: Daniele Spuches
+Customer: Antoine Hauguel
+Location: Southampton, United Kingdom.
+Date: 01/12/2025
+
+
+
+1.	Introduction
+This report documents the investigation and resolution of two critical network issues affecting the client’s local infrastructure:
+•	Internet connection instability while connected to a WiFi repeater
+•	Frequent failure of devices to obtain an IP address when connected through a repeater
+Due to operational requirements, the solution had to be implemented, tested, and fully functional within 20 hours.
+2.	Limitations
+•	The intervention was limited to configuration-level changes.
+•	No additional cabling could be installed.
+•	No replacement of the primary router was allowed.
+•	The solution had to be deployed and validated within a maximum timeframe of 20 hours.
+•	The network includes one main router (DHCP server enabled), one Wavlink extender, and one BT standard repeater.
+•	Wired configuration was not possible due to environmental constraints.
+
+3.	The Problems
+3.1 Internet Connection Instability
+Users experienced reduced performance and unstable connection while connected to one of the repeaters.
+
+3.2 DHCP Address Assignment Failure
+Certain devices intermittently failed to obtain an IP address when connected through a repeater.
+Observed behavior: Devices displayed errors similar to: “Unable to find IP address”. Devices connected directly to the router did not experience any issue. The issue occurred intermittently and appeared time-related.
+
+4.	Evidence and Technical Analysis
+4.1 Resolution of Instability
+Action Taken: Exchanged physical positions of the Wavlink repeater and the secondary repeater.
+Result: Measured speed improvement of approximately +10 Mbps. Connection stability significantly improved. Signal quality appeared stable under testing conditions.
+
+4.2 DHCP Failure Investigation
+Evidence 1- Manual IP Configuration Test: When a static IP address was manually configured on affected devices, the error immediately disappeared and Internet access was restored.
+Evidence 2- Packet Capture Analysis: Using Wireshark, DHCP traffic was analyzed. Affected devices sent multiple DHCP Discovery packets but no DHCP Offer response was received from the router.
+
+4.3 MAC-NAT Behavior Analysis
+Investigation revealed that the repeater masks client MAC addresses under its own MAC (MAC-NAT behavior).
+This causes the DHCP server to associate multiple devices with the same MAC address, potentially rejecting new DHCP Discovery requests if an IP is already assigned.
+This explains: Intermittent failures, DHCP lease renewal issues, Immediate resolution when using static IP configuration
+
+5.	Device Behavior
+Wavlink Extender Modes: 
+Repeater Mode: Uses MAC-NAT and reduces bandwidth. 
+ Access Point Mode: Eliminates MAC-NAT but requires Ethernet cabling (not available). 
+ Mesh-Repeater Mode: Avoids MAC-NAT but incompatible with current router. 
+ Mesh-Router Mode: Requires mesh compatibility (not available).
+BT Repeater: 
+Operates only in repeater mode.  Uses MAC-NAT. Limited configurability.
+
+6.	Root Cause Conclusion
+The DHCP unavailability issue is caused by MAC-NAT implementation in repeater mode, masking client MAC addresses and causing DHCP server conflicts.
+
+7.	Proposed Solution
+7.1 DHCP Pool Reduction Reduce DHCP pool range in router configuration to: 192.168.1.2-192.168.1.214
+7.2 Static IP Assignment (Out-of-Pool) Assign static IP addresses outside the DHCP pool for affected devices to avoid conflicts and DHCP issues.
+8.	Justification
+Advantages: Deployable within 20-hour timeframe. No hardware changes required. Eliminates DHCP-related failures under current constraints.
+Limitations: Requires manual IP management. Not scalable in large environments. Mitigates but does not eliminate MAC-NAT behavior.
+
+9.	Final Status
+Internet connection behaviour has been observed for two weeks following the intervention and no particular issue has been reported. The problems are considere
